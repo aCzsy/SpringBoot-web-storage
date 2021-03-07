@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
         <title>Home</title>
@@ -11,7 +11,7 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
             <div id="logoutDiv">
-                <form action="#" method="POST">
+                <form action="#" th:action="@{/logout}" method="POST">
                     <button type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
@@ -75,13 +75,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <button type="button" class="btn btn-success" th:noteId="${note.noteid}" th:title="${note.notetitle}" th:description="${note.notedescription}"
+                                                    onclick="showNoteEditModal(this.getAttribute('noteId'),this.getAttribute('title'),this.getAttribute('description'))" th:href="@{/edit/{id}(id=${note.getNoteid()})}">Edit</button>
+                                            <a class="btn btn-danger" th:href="@{/delete/(id=${note.getUserid()}, noteid=${note.getNoteid()})}">Delete</a>
+
                                         </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
+                                        <th scope="row" th:text="${note.getNotetitle()}"></th>
+                                        <td th:text="${note.getNotedescription()}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,15 +99,15 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form action="#" th:object="${noteFormObject}" th:action="@{/home}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
-                                                <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
+                                                <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" th:field="*{noteTitle}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-description" class="col-form-label">Description</label>
-                                                <textarea class="form-control" name="noteDescription" id="note-description" rows="5" maxlength="1000" required></textarea>
+                                                <textarea class="form-control" name="noteDescription" id="note-description" rows="5" maxlength="1000" th:field="*{noteDescription}" required></textarea>
                                             </div>
                                             <button id="noteSubmit" type="submit" class="d-none"></button>
                                         </form>
@@ -117,6 +119,38 @@
                                 </div>
                             </div>
                         </div>
+                        <!--Edit-->
+                        <div class="modal fade" id="noteEditModal" tabindex="-1" role="dialog" aria-labelledby="noteEditModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="noteEditModalLabel">Note</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="#" th:object="${noteFormObject}" th:action="@{/update/{noteTitle}(noteTitle=${noteFormObject.getNoteTitle()})}" method="POST">
+                                            <input type="hidden" name="editNoteId" id="editNote-id">
+                                            <div class="form-group">
+                                                <label for="editNote-title" class="col-form-label">Title</label>
+                                                <input type="text" name= "editNoteTitle" class="form-control" id="editNote-title" maxlength="20" th:field="*{noteTitle}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="editNote-description" class="col-form-label">Description</label>
+                                                <textarea class="form-control" name="editNoteDescription" id="editNote-description" rows="5" maxlength="1000" th:field="*{noteDescription}" required></textarea>
+                                            </div>
+                                            <button id="editNoteSubmit" type="submit" class="d-none"></button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="$('#editNoteSubmit').click();">Edit note</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Edit-->
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
@@ -198,6 +232,14 @@
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
                 $('#noteModal').modal('show');
+            }
+
+            //For editing the note modal
+            function showNoteEditModal(editNoteId, editNoteTitle, editNoteDescription) {
+                $('#editNote-id').val(editNoteId ? editNoteId : '');
+                $('#editNote-title').val(editNoteTitle ? editNoteTitle : '');
+                $('#editNote-description').val(editNoteDescription ? editNoteDescription : '');
+                $('#noteEditModal').modal('show');
             }
 
             // For opening the credentials modal
