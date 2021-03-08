@@ -14,14 +14,14 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
-public class NoteUploadService {
+public class NoteService {
     private NoteMapper noteMapper;
     private UserMapper userMapper;
     private User currentUser;
     private Authentication authentication;
 
 
-    public NoteUploadService(NoteMapper noteMapper, UserMapper userMapper) {
+    public NoteService(NoteMapper noteMapper, UserMapper userMapper) {
         this.noteMapper = noteMapper;
         this.userMapper = userMapper;
     }
