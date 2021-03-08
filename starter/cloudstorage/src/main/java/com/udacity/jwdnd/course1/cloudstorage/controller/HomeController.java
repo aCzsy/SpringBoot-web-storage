@@ -49,7 +49,7 @@ public class HomeController {
     }
 
     @PostMapping("/update")
-    public String updateNote(@RequestParam(value = "noteId") Integer noteId, Model model, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
+    public String updateNote(@RequestParam("noteId") Integer noteId, Model model, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
         System.out.println("noteId: " + noteId);
         noteUploadService.updateNoteById(noteFormObject.getNoteTitle(), noteFormObject.getNoteDescription(), noteId);
         model.addAttribute("notes",noteUploadService.getAllNotes(authentication));
