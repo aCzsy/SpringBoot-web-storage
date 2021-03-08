@@ -20,9 +20,10 @@ public class HomeController {
     private UserService userService;
     private CredentialService credentialService;
 
-    public HomeController(NoteService noteService, UserService userService) {
+    public HomeController(NoteService noteService, UserService userService, CredentialService credentialService) {
         this.noteService = noteService;
         this.userService = userService;
+        this.credentialService = credentialService;
     }
 
     @GetMapping("/home")

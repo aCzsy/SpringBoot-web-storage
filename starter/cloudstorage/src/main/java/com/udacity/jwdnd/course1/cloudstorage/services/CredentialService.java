@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.CredentialFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,10 @@ public class CredentialService {
         this.userMapper = userMapper;
         this.credentialsMapper = credentialsMapper;
         this.currentUser = currentUser;
+    }
+
+    public void addCredential(CredentialFormObject credentialFormObject, Authentication authentication){
+        
     }
 
     public List<Credential> getAllCredentials(Authentication authentication){
