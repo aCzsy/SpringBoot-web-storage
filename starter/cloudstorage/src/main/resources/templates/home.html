@@ -78,7 +78,7 @@
                                     <tr th:each="note : ${notes}">
                                         <td>
                                             <button type="button" class="btn btn-success" th:noteId="${note.noteid}" th:title="${note.notetitle}" th:description="${note.notedescription}"
-                                                    onclick="showNoteEditModal(this.getAttribute('noteId'),this.getAttribute('title'),this.getAttribute('description'))" th:href="@{/edit/{id}(id=${note.getNoteid()})}">Edit</button>
+                                                    onclick="showNoteEditModal(this.getAttribute('noteId'),this.getAttribute('title'),this.getAttribute('description'))">Edit</button>
                                             <a class="btn btn-danger" th:href="@{/delete/(id=${note.getUserid()}, noteid=${note.getNoteid()})}">Delete</a>
 
                                         </td>
@@ -100,7 +100,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="#" th:object="${noteFormObject}" th:action="@{/home}" method="POST">
-                                            <input type="hidden" name="noteId" id="note-id">
+                                            <input type="hidden" name="noteId" id="note-id" th:field="*{noteId}">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" th:field="*{noteTitle}" required>
@@ -130,8 +130,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:object="${noteFormObject}" th:action="@{/update/{noteTitle}(noteTitle=${noteFormObject.getNoteTitle()})}" method="POST">
-                                            <input type="hidden" name="editNoteId" id="editNote-id">
+                                        <form action="#" th:object="${noteFormObject}" th:action="@{/update}" method="POST">
+                                            <input type="hidden" name="editNoteId" id="editNote-id" th:field="*{noteId}">
                                             <div class="form-group">
                                                 <label for="editNote-title" class="col-form-label">Title</label>
                                                 <input type="text" name= "editNoteTitle" class="form-control" id="editNote-title" maxlength="20" th:field="*{noteTitle}" required>

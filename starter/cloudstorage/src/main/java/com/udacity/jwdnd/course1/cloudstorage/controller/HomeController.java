@@ -48,18 +48,10 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/edit/{noteid}")
-    public String getCurrentNote(@PathVariable("noteid") Integer noteid, Model model,Authentication authentication){
-        Note note = noteMapper.getNoteById(noteid);
-        model.addAttribute("notes",noteUploadService.getAllNotes(authentication));
-        return "home";
-    }
-
-    @PostMapping("/update/{noteTitle}")
-    public String updateNote(@PathVariable("noteTitle") String notetitle, Model model, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
-        System.out.println("notetitle: " + notetitle);
-        Note note = noteUploadService.getNote(notetitle);
-        noteUploadService.updateNote(noteFormObject.getNoteTitle(), noteFormObject.getNoteDescription(), note.getNotetitle());
+    @PostMapping("/update")
+    public String updateNote(@RequestParam(value = "noteId") Integer noteId, Model model, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
+        System.out.println("noteId: " + noteId);
+        noteUploadService.updateNoteById(noteFormObject.getNoteTitle(), noteFormObject.getNoteDescription(), noteId);
         model.addAttribute("notes",noteUploadService.getAllNotes(authentication));
         return "home";
     }
