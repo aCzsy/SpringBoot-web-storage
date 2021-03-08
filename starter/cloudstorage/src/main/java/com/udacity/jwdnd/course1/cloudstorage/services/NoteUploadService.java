@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +54,7 @@ public class NoteUploadService {
     public void deleteNote(Integer userid, Integer noteid){
         Integer userById = userMapper.getUserById(userid).getUserid();
         Integer noteById = noteMapper.getNoteById(noteid).getNoteid();
-        if(userById == noteMapper.getNoteById(noteid).getUserid()){
+        if(userById.equals(noteMapper.getNoteById(noteid).getUserid())){
             System.out.println("userById : " + userById);
             noteMapper.deteleNote(noteById);
         } else{
@@ -71,7 +72,11 @@ public class NoteUploadService {
     }
 
     public void updateNoteById(String newTitle, String description, Integer noteid){
-        noteMapper.updateNote(newTitle, description, noteid);
+        String titleBeforeChange = noteMapper.getNoteById(noteid).getNotetitle();
+        System.out.println("Updating note with id: " + noteid + " and title : " + titleBeforeChange);
+        int rowsChanged = noteMapper.updateNote(newTitle, description, noteid);
+        System.out.println("Note successfully updated \n" + rowsChanged + " rows updated\n" +
+                "New title: " + newTitle + "\nNew description: " + description);
     }
 
 }
