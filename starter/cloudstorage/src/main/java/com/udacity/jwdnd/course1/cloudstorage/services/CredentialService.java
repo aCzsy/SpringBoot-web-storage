@@ -5,29 +5,52 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.CredentialFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 
 @Service
 public class CredentialService {
     private UserMapper userMapper;
     private CredentialsMapper credentialsMapper;
+    private EncryptDecryptService encryptDecryptService;
     private User currentUser;
 
-    public CredentialService(UserMapper userMapper, CredentialsMapper credentialsMapper, User currentUser) {
+    public CredentialService(UserMapper userMapper, CredentialsMapper credentialsMapper, EncryptDecryptService encryptDecryptService) {
         this.userMapper = userMapper;
         this.credentialsMapper = credentialsMapper;
-        this.currentUser = currentUser;
+        this.encryptDecryptService = encryptDecryptService;
     }
 
+
     public void addCredential(CredentialFormObject credentialFormObject, Authentication authentication){
-        
+        Credential credential = new Credential();
+        credential.setCredentialid(credentialFormObject.getCredentialId());
+        credential.setUrl(credentialFormObject.getCredentialUrl());
+        credential.setUsername(credentialFormObject.getCredentialUsername());
+        credential.setKey(encryptDecryptService.getEncodedKey());
+        String encryptedPassword = encryptDecryptService.encrypt(credentialFormObject.getCredentialPassword());
+        credential.setPassword(encryptedPassword);
+        currentUser = userMapper.getUser(authentication.getName());
+        credential.setUserid(currentUser.getUserid());
+        credentialsMapper.insertCredential(credential);
     }
 
     public List<Credential> getAllCredentials(Authentication authentication){
         currentUser = userMapper.getUser(authentication.getName());
         return credentialsMapper.getAllCredentials(currentUser.getUserid());
+    }
+
+    public Credential getCredential(Integer credentialId){
+        return credentialsMapper.getCredential(credentialId);
+    }
+
+
+    public void deleteCredential(Integer credentialId){
+        credentialsMapper.deteleCredential(credentialId);
     }
 }
