@@ -53,4 +53,10 @@ public class CredentialService {
     public void deleteCredential(Integer credentialId){
         credentialsMapper.deteleCredential(credentialId);
     }
+
+    public void updateCredential(String newUrl, String newUsername, String newPassword, Integer credentialId){
+        String password = encryptDecryptService.encrypt(newPassword);
+        int updatedCredential = credentialsMapper.updateCredential(newUrl,newUsername,newPassword,credentialId);
+        System.out.println("Updated " + updatedCredential + " credentials");
+    }
 }

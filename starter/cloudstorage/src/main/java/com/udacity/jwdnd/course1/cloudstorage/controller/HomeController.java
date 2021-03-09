@@ -90,4 +90,14 @@ public class HomeController {
         return "home";
     }
 
+    @PostMapping("/update-credential")
+    public String updateCredential(@RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
+                                   @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
+                                   Model model, Authentication authentication){
+        credentialService.updateCredential(credentialFormObject.getCredentialUrl(),credentialFormObject.getCredentialUsername(),credentialFormObject.getCredentialPassword(),credentialId);
+        model.addAttribute("notes", noteService.getAllNotes(authentication));
+        model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        return "home";
+    }
+
 }

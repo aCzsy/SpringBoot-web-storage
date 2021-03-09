@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!--Edit-->
+                        <!--Note edit modal-->
                         <div class="modal fade" id="noteEditModal" tabindex="-1" role="dialog" aria-labelledby="noteEditModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!--End Edit-->
+                        <!--End of Note edit modal-->
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
@@ -170,7 +170,10 @@
                                 <tbody>
                                 <tr th:each="credential : ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
+                                        <button type="button" class="btn btn-success" th:credentialId="${credential.credentialid}" th:credentialUrl="${credential.url}"
+                                        th:credentialUsername="${credential.username}", th:credentialPassword="${credential.password}"
+                                        onclick="showCredentialEditModal(this.getAttribute('credentialId'),this.getAttribute('credentialUrl'),
+                                        this.getAttribute('credentialUsername'),this.getAttribute('credentialPassword'))">Edit</button>
                                         <a class="btn btn-danger" th:href="@{/delete-credential/(credentialId=${credential.getCredentialid()})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
@@ -217,36 +220,36 @@
                         </div>
                     </div>
                     <!--Credential edit modal-->
-                    <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="credentialEditModal" tabindex="-1" role="dialog" aria-labelledby="credentialEditModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="credentialModalLabel">Credential</h5>
+                                    <h5 class="modal-title" id="credentialEditModalLabel">Credential</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#" th:object="${credentialFormObject}" th:action="@{/add-credential}" method="POST">
-                                        <input type="hidden" name="credentialId" id="credential-id" th:field="*{credentialId}">
+                                    <form action="#" th:object="${credentialFormObject}" th:action="@{/update-credential}" method="POST">
+                                        <input type="hidden" name="credentialEditId" id="credentialEdit-id" th:field="*{credentialId}">
                                         <div class="form-group">
                                             <label for="note-title" class="col-form-label">URL</label>
-                                            <input type="text" name= "url" class="form-control" id="credential-url" th:field="*{credentialUrl}" maxlength="100" required>
+                                            <input type="text" name= "editUrl" class="form-control" id="credentialEdit-url" th:field="*{credentialUrl}" maxlength="100" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="note-title" class="col-form-label">Username</label>
-                                            <input type="text" name= "username" class="form-control" id="credential-username" th:field="*{credentialUsername}" maxlength="30" required>
+                                            <input type="text" name= "editUsername" class="form-control" id="credentialEdit-username" th:field="*{credentialUsername}" maxlength="30" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="note-title" class="col-form-label">Password</label>
-                                            <input type="text" name= "password" class="form-control" id="credential-password" th:field="*{credentialPassword}" maxlength="30" required>
+                                            <input type="text" name= "editPassword" class="form-control" id="credentialEdit-password" th:field="*{credentialPassword}" maxlength="30" required>
                                         </div>
-                                        <button id="credentialSubmit" type="submit" class="d-none"></button>
+                                        <button id="credentialEditSubmit" type="submit" class="d-none"></button>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                    <button type="button" class="btn btn-primary" onclick="$('#credentialEditSubmit').click();">Save changes</button>
                                 </div>
                             </div>
                         </div>
