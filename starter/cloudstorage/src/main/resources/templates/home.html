@@ -171,7 +171,7 @@
                                 <tr th:each="credential : ${credentials}">
                                     <td>
                                         <button type="button" class="btn btn-success" th:credentialId="${credential.credentialid}" th:credentialUrl="${credential.url}"
-                                        th:credentialUsername="${credential.username}", th:credentialPassword="${credential.password}"
+                                        th:credentialUsername="${credential.username}", th:credentialPassword="${decryptedPassword.decryptValue(credential.password,credential.key)}"
                                         onclick="showCredentialEditModal(this.getAttribute('credentialId'),this.getAttribute('credentialUrl'),
                                         this.getAttribute('credentialUsername'),this.getAttribute('credentialPassword'))">Edit</button>
                                         <a class="btn btn-danger" th:href="@{/delete-credential/(credentialId=${credential.getCredentialid()})}">Delete</a>

@@ -1,13 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.CredentialFormObject;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import com.udacity.jwdnd.course1.cloudstorage.model.NoteFormObject;
-import com.udacity.jwdnd.course1.cloudstorage.model.User;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.model.*;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +15,13 @@ public class HomeController {
     private NoteService noteService;
     private UserService userService;
     private CredentialService credentialService;
+    private EncryptionService encryptionService;
 
-    public HomeController(NoteService noteService, UserService userService, CredentialService credentialService) {
+    public HomeController(NoteService noteService, UserService userService, CredentialService credentialService, EncryptionService encryptionService) {
         this.noteService = noteService;
         this.userService = userService;
         this.credentialService = credentialService;
+        this.encryptionService = encryptionService;
     }
 
     @GetMapping("/home")
@@ -33,6 +30,7 @@ public class HomeController {
                            Model model, Authentication authentication){
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
 
@@ -43,6 +41,7 @@ public class HomeController {
         noteService.addNote(noteFormObject, authentication);
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
 
@@ -55,6 +54,7 @@ public class HomeController {
         noteService.deleteNote(user.getUserid(), note.getNoteid());
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         System.out.println("Executing deleteCurrentNote()");
         return "home";
     }
@@ -67,6 +67,7 @@ public class HomeController {
         noteService.updateNoteById(noteFormObject.getNoteTitle(), noteFormObject.getNoteDescription(), noteId);
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
 
@@ -77,6 +78,7 @@ public class HomeController {
         credentialService.addCredential(credentialFormObject,authentication);
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
 
@@ -87,6 +89,7 @@ public class HomeController {
         credentialService.deleteCredential(credentialId);
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
 
@@ -94,10 +97,10 @@ public class HomeController {
     public String updateCredential(@RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                                    @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                    Model model, Authentication authentication){
-        credentialService.updateCredential(credentialFormObject.getCredentialUrl(),credentialFormObject.getCredentialUsername(),credentialFormObject.getCredentialPassword(),credentialId);
+        credentialService.updateCredential(credentialFormObject.getCredentialUrl(),credentialFormObject.getCredentialUsername(), credentialFormObject.getCredentialPassword(),credentialId);
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
         return "home";
     }
-
 }

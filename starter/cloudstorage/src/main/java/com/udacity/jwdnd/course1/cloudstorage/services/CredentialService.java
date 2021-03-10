@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
@@ -25,6 +26,11 @@ public class CredentialService {
         this.credentialsMapper = credentialsMapper;
         this.encryptDecryptService = encryptDecryptService;
     }
+
+//    @PostConstruct
+//    public void postConstruct(Authentication authentication){
+//        currentUser = userMapper.getUser(authentication.getName());
+//    }
 
 
     public void addCredential(CredentialFormObject credentialFormObject, Authentication authentication){
@@ -56,7 +62,8 @@ public class CredentialService {
 
     public void updateCredential(String newUrl, String newUsername, String newPassword, Integer credentialId){
         String password = encryptDecryptService.encrypt(newPassword);
-        int updatedCredential = credentialsMapper.updateCredential(newUrl,newUsername,newPassword,credentialId);
+        int updatedCredential = credentialsMapper.updateCredential(newUrl,newUsername,password,credentialId);
         System.out.println("Updated " + updatedCredential + " credentials");
     }
+
 }
