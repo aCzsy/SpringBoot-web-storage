@@ -58,7 +58,7 @@
                                 <tbody>
                                 <tr th:each="file : ${files}">
                                     <td>
-                                        <a target="_blank" class="btn btn-success" th:fileId="${file.getFileId()}" th:fileName="${file.getFilename()}" th:fileSize="${file.getFilesize()}"
+                                        <a target="_blank" class="btn btn-success" th:fileId="${file.getFileId()}" th:fileName="${file.getFilename()}" th:fileSize="${file.getFilesize() + ' KBs'}"
                                            onclick="showFileDownloadModal(this.getAttribute('fileId'),this.getAttribute('fileName'),this.getAttribute('fileSize'))">View</a>
                                         <a  class="btn btn-danger" th:href="@{/delete-file/(id=${file.getFileId()})}">Delete</a>
                                     </td>
@@ -79,7 +79,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#" th:object="${fileFormObject}" th:action="@{/download-file/(id=${fileFormObject.getFileId()})}" method="GET">
+                                    <form action="#" th:object="${fileFormObject}" th:action="@{/download-file/}" method="GET">
                                         <input type="hidden" name="fileId" id="download-file-id" th:field="*{fileId}">
                                         <div class="form-group">
                                             <label for="file-name" class="col-form-label">File Name</label>

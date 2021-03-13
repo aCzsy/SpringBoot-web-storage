@@ -157,12 +157,12 @@ public class HomeController {
     }
 
     @GetMapping("/download-file")
-    public String downloadFile(@RequestParam(value = "id") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
+    public String downloadFile(@RequestParam(value = "fileId") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                                @ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                Model model, Authentication authentication, HttpServletRequest request, HttpServletResponse response){
 
         File foundFile = fileService.getFileById(fileId);
-        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/downloads/");
+        String dataDirectory = request.getServletContext().getRealPath("/download-file/");
         Path file = Paths.get(dataDirectory, foundFile.getFilename());
         if(Files.exists(file)){
             response.setContentType("application/octet-stream");
