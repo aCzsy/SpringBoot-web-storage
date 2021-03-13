@@ -35,7 +35,6 @@ public class CredentialService {
 
     public void addCredential(CredentialFormObject credentialFormObject, Authentication authentication){
         Credential credential = new Credential();
-        credential.setCredentialid(credentialFormObject.getCredentialId());
         credential.setUrl(credentialFormObject.getCredentialUrl());
         credential.setUsername(credentialFormObject.getCredentialUsername());
         credential.setKey(encryptDecryptService.getEncodedKey());
