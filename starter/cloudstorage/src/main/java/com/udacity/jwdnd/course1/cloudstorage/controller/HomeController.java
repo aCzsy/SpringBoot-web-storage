@@ -10,7 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 @Controller
@@ -144,6 +149,31 @@ public class HomeController {
                              @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              Model model, Authentication authentication){
         fileService.deleteFile(fileId);
+        model.addAttribute("notes", noteService.getAllNotes(authentication));
+        model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
+        model.addAttribute("decryptedPassword",encryptionService);
+        model.addAttribute("files", fileService.getAllFiles(authentication));
+        return "home";
+    }
+
+    @GetMapping("/download-file")
+    public String downloadFile(@RequestParam(value = "id") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
+                               @ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
+                               Model model, Authentication authentication, HttpServletRequest request, HttpServletResponse response){
+
+        File foundFile = fileService.getFileById(fileId);
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/downloads/");
+        Path file = Paths.get(dataDirectory, foundFile.getFilename());
+        if(Files.exists(file)){
+            response.setContentType("application/octet-stream");
+            response.addHeader("Content-Disposition", "attachment; filename=" + foundFile.getFilename());
+            try{
+                Files.copy(file, response.getOutputStream());
+                response.getOutputStream().flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -39,6 +40,10 @@ public class FileService {
 
     public File getFile(String fileName){
         return fileMapper.getFileByName(fileName);
+    }
+
+    public File getFileById(Integer fileId){
+        return fileMapper.getFile(fileId);
     }
 
     public List<File> getAllFiles(Authentication authentication){
