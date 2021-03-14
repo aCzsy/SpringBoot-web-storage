@@ -13,6 +13,7 @@ public interface CredentialsMapper {
     @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
     List<Credential> getAllCredentials(Integer userid);
 
+
     @Delete("DELETE FROM CREDENTIALS WHERE credentialid = #{credentialid}")
     void deteleCredential(Integer credentialid);
 
