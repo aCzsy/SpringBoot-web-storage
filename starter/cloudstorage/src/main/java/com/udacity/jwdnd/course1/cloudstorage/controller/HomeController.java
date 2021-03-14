@@ -79,7 +79,7 @@ public class HomeController {
     }
 
     @PostMapping("/updateNote")
-    public String updateNote(@RequestParam("id") Integer noteId, Model model, @ModelAttribute("fileFormObject") FileFormObject fileFormObject,
+    public String updateNote(@RequestParam("noteId") Integer noteId, Model model, @ModelAttribute("fileFormObject") FileFormObject fileFormObject,
                              @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
         System.out.println("noteId: " + noteId);
@@ -160,8 +160,7 @@ public class HomeController {
     }
 
     @GetMapping("/download-file")
-    public ResponseEntity downloadFile(@RequestParam(value = "fileId") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject, HttpServletResponse httpServletResponse,
-                                                 @ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject){
+    public ResponseEntity downloadFile(@RequestParam(value = "fileId") Integer fileId){
         File file = fileService.downloadFile(fileId);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContenttype()))
