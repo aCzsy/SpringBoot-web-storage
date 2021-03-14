@@ -29,18 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.logout()
-                .logoutSuccessHandler(new LogoutSuccessHandler() {
-                    @Override
-                    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                        try {
-                            Thread.sleep(2000);
-                            System.out.println("User " + authentication.getName() + " is logging out");
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("User " + authentication.getName() + " has logged out");
-                        httpServletResponse.sendRedirect("/login");
+                .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("User " + authentication.getName() + " is logging out");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    System.out.println("User " + authentication.getName() + " has logged out");
+                    httpServletResponse.sendRedirect("/login");
                 });
     }
 }

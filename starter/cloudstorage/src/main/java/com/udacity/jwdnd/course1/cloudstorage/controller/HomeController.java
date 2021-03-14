@@ -1,21 +1,23 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import com.udacity.jwdnd.course1.cloudstorage.services.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 @Controller
@@ -27,6 +29,7 @@ public class HomeController {
     private CredentialService credentialService;
     private EncryptionService encryptionService;
     private FileService fileService;
+
 
     @Autowired
     public HomeController(NoteService noteService, UserService userService, CredentialService credentialService, EncryptionService encryptionService, FileService fileService) {
@@ -157,27 +160,12 @@ public class HomeController {
     }
 
     @GetMapping("/download-file")
-    public String downloadFile(@RequestParam(value = "fileId") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
-                               @ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
-                               Model model, Authentication authentication, HttpServletRequest request, HttpServletResponse response){
-
-        File foundFile = fileService.getFileById(fileId);
-        String dataDirectory = request.getServletContext().getRealPath("/download-file/");
-        Path file = Paths.get(dataDirectory, foundFile.getFilename());
-        if(Files.exists(file)){
-            response.setContentType("application/octet-stream");
-            response.addHeader("Content-Disposition", "attachment; filename=" + foundFile.getFilename());
-            try{
-                Files.copy(file, response.getOutputStream());
-                response.getOutputStream().flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        model.addAttribute("notes", noteService.getAllNotes(authentication));
-        model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
-        model.addAttribute("decryptedPassword",encryptionService);
-        model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+    public ResponseEntity downloadFile(@RequestParam(value = "fileId") Integer fileId, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject, HttpServletResponse httpServletResponse,
+                                                 @ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject){
+        File file = fileService.downloadFile(fileId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContenttype()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(new ByteArrayResource(file.getFiledata()));
     }
 }

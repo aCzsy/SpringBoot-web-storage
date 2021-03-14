@@ -79,7 +79,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#" th:object="${fileFormObject}" th:action="@{/download-file/}" method="GET">
+                                    <form action="#" id="download-form" th:object="${fileFormObject}" th:action="@{/download-file/}" method="GET">
                                         <input type="hidden" name="fileId" id="download-file-id" th:field="*{fileId}">
                                         <div class="form-group">
                                             <label for="file-name" class="col-form-label">File Name</label>
@@ -94,7 +94,8 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" onclick="$('#fileDownload').click();">Download</button>
+<!--                                    <button type="button" class="btn btn-primary" onclick="$('#fileDownload').click();">Download</button>-->
+                                    <button type="button" class="btn btn-primary" onclick="fileDownload()">Download</button>
                                 </div>
                             </div>
                         </div>
@@ -343,6 +344,19 @@
                 $('#file-name').val(fileName ? fileName : '');
                 $('#file-size').val(fileSize ? fileSize : '');
                 $('#fileModal').modal('show');
+            }
+
+            function fileDownload() {
+                let formDoc = document.getElementById('download-form');
+                formDoc.submit();
+                sleep(1500).then(function() {
+                    window.location.href = "http://localhost:8080/home";
+                });
+            }
+            function sleep(milliseconds) {
+                return new Promise(function (resolve) {
+                    setTimeout(resolve, milliseconds);
+                });
             }
         </script>
     </body>

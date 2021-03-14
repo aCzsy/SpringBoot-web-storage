@@ -4,27 +4,27 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.FileFormObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
+
 
 @Service
 public class FileService {
     private UserMapper userMapper;
     private FileMapper fileMapper;
 
+
+    @Autowired
     public FileService(UserMapper userMapper, FileMapper fileMapper) {
         this.userMapper = userMapper;
         this.fileMapper = fileMapper;
     }
 
-    public void addFile(FileFormObject fileFormObject, Authentication authentication) throws IOException, SQLException {
+    public void addFile(FileFormObject fileFormObject, Authentication authentication) throws IOException {
         File file = new File();
         file.setFilename(fileFormObject.getFileUpload().getOriginalFilename());
         file.setContenttype(fileFormObject.getFileUpload().getContentType());
@@ -53,4 +53,10 @@ public class FileService {
     public void deleteFile(Integer fileId){
         fileMapper.deleteFile(fileId);
     }
+
+    public File downloadFile(Integer fileId){
+        return fileMapper.getFile(fileId);
+    }
+
+
 }
