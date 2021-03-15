@@ -112,6 +112,8 @@ class CloudStorageApplicationTests {
 		testSignupLogin();
 		driver.get("http://localhost:" + port + "/home#nav-notes");
 		homePage.createNote(noteTitle,noteDescription);
+		Assertions.assertEquals(noteTitle,homePage.getNoteTitle());
+		Assertions.assertEquals(noteDescription,homePage.getNoteDescription());
 	}
 
 }

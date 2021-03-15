@@ -13,6 +13,15 @@ public class HomePage {
         PageFactory.initElements(webDriver, this);
     }
 
+    @FindBy(id = "open-note-modal")
+    private WebElement openNoteModal;
+
+    @FindBy(id = "note-title-display")
+    private WebElement noteTitleDisplay;
+
+    @FindBy(id = "note-description-display")
+    private WebElement noteDescrDisplay;
+
     @FindBy(id = "note-id")
     private WebElement noteId;
 
@@ -43,11 +52,20 @@ public class HomePage {
     @FindBy(id = "close-note-modal-button-edit")
     private WebElement closeNoteModalButtonEdit;
 
+    public String getNoteTitle(){
+        return noteTitleDisplay.getText();
+    }
+
+    public String getNoteDescription(){
+        return noteDescription.getText();
+    }
+
     public void clickLogoutButton(){
         logoutButton.submit();
     }
 
     public void createNote(String note_title, String note_descr){
+        openNoteModal.submit();
         noteTitle.sendKeys(note_title);
         noteDescription.sendKeys(note_descr);
         saveNoteButton.click();

@@ -102,7 +102,7 @@
                     </div>
                     <!--End of file download modal-->
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button style="margin: 0.25em;" id="open-file-modal" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button style="margin: 0.25em;" id="open-note-modal" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -123,8 +123,8 @@
                                             <a class="btn btn-danger" id="note-delete-button" th:href="@{/deleteNote/(id=${note.getUserid()}, noteid=${note.getNoteid()})}">Delete</a>
 
                                         </td>
-                                        <th scope="row" th:text="${note.getNotetitle()}"></th>
-                                        <td th:text="${note.getNotedescription()}"></td>
+                                        <th id="note-title-display" scope="row" th:text="${note.getNotetitle()}"></th>
+                                        <td id="note-description-display" th:text="${note.getNotedescription()}"></td>
                                     </tr>
                                 </tbody>
                             </table>
