@@ -30,8 +30,9 @@ public class HomePage {
     /**
      * NOTES SECTION
      */
-
-
+    /**
+     * NOTES WEB ELEMENTS
+     */
     @FindBy(id = "nav-notes-tab")
     private WebElement notesTab;
 
@@ -88,6 +89,20 @@ public class HomePage {
 
     @FindBy(id = "notesList")
     private WebElement notesList;
+
+    /**
+     * CREDENTIALS WEB ELEMENTS
+     */
+
+    @FindBy(id = "nav-credentials-tab")
+    private WebElement navCredentialsTab;
+
+
+
+    /**
+     * NOTES SECTION
+     * @return
+     */
 
     public String getNoteTitle(){
         return noteTitleDisplay.getText();
@@ -159,4 +174,15 @@ public class HomePage {
         clickNoteDeleteButton();
         openNotesTab();
     }
+
+    /**
+     * CREDENTIALS SECTION
+     */
+
+    public void openCredentialsTab(){
+        waitForElement(navCredentialsTab);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",navCredentialsTab);
+    }
+    
+
 }
