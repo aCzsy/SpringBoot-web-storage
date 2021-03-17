@@ -116,7 +116,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="note : ${notes}">
+                                    <tr id="notesList" th:each="note : ${notes}">
                                         <td>
                                             <button type="button" id="note-edit-button" class="btn btn-success" th:noteId="${note.noteid}" th:title="${note.notetitle}" th:description="${note.notedescription}"
                                                     onclick="showNoteEditModal(this.getAttribute('noteId'),this.getAttribute('title'),this.getAttribute('description'))">Edit</button>

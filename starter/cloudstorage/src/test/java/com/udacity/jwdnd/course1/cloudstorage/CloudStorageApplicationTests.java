@@ -3,9 +3,11 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.SignupPage;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -98,7 +100,6 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Home",driver.getTitle());
 
 		homePage.clickLogoutButton();
-		Thread.sleep(1200);
 		Assertions.assertNotEquals("Home",driver.getTitle());
 		driver.get("http://localhost:" + port + "/home");
 		Assertions.assertEquals("Login",driver.getTitle());
@@ -114,5 +115,32 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals(noteTitle,homePage.getNoteTitle());
 		Assertions.assertEquals(noteDescription,homePage.getNoteDescription());
 	}
+
+	@Test
+	public void testEditNote(){
+		String noteTitle = "My note";
+		String noteDescription = "This note is for testing";
+
+		testSignupLogin();
+		homePage.editNote(noteTitle,noteDescription);
+		Assertions.assertEquals("New title", homePage.getNoteTitle());
+		Assertions.assertEquals("New description", homePage.getNoteDescription());
+	}
+
+	@Test
+	public void testDeleteNote(){
+		String noteTitle = "My note";
+		String noteDescription = "This note is for testing";
+
+		testSignupLogin();
+		homePage.deleteNote(noteTitle,noteDescription);
+		Assertions.assertThrows(NoSuchElementException.class,()-> {
+			homePage.getNoteTitle();
+		});
+	}
+
+	/**
+	 * CREDENTIALS SECTION
+	 */
 
 }

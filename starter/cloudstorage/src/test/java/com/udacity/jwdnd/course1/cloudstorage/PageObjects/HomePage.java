@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.PageObjects;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,6 +9,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class HomePage {
     @FindBy(id = "logout-button")
@@ -19,9 +23,14 @@ public class HomePage {
     }
 
     private void waitForElement(WebElement webElement){
-        new WebDriverWait(webDriver,40)
+        new WebDriverWait(webDriver,10)
                 .until(ExpectedConditions.visibilityOf(webElement));
     }
+
+    /**
+     * NOTES SECTION
+     */
+
 
     @FindBy(id = "nav-notes-tab")
     private WebElement notesTab;
@@ -59,14 +68,26 @@ public class HomePage {
     @FindBy(id = "editNote-description")
     private WebElement editNoteDescription;
 
+    @FindBy(id = "note-edit-button")
+    private WebElement clickToEditButton;
+
     @FindBy(id = "edit-note-button")
-    private WebElement editNoteButton;
+    private WebElement saveEditNoteButton;
+
+    @FindBy(id = "note-delete-button")
+    private WebElement noteDeleteButton;
 
     @FindBy(id = "close-note-modal-button-edit")
     private WebElement closeNoteModalButtonEdit;
 
     @FindBy(id = "userTable")
     private WebElement userTable;
+
+    @FindBy(id = "noteEditModal")
+    private WebElement noteEditModal;
+
+    @FindBy(id = "notesList")
+    private WebElement notesList;
 
     public String getNoteTitle(){
         return noteTitleDisplay.getText();
@@ -77,7 +98,7 @@ public class HomePage {
     }
 
     public void clickLogoutButton(){
-        logoutButton.submit();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",logoutButton);
     }
 
     public void openNotesTab(){
@@ -95,21 +116,47 @@ public class HomePage {
         ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();",saveNoteButton);
     }
 
+    public void clickToEditButton(){
+        waitForElement(clickToEditButton);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",clickToEditButton);
+    }
+
+    public void clickSaveNoteEditButton(){
+        waitForElement(saveEditNoteButton);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",saveEditNoteButton);
+    }
+
+    public void clickNoteDeleteButton(){
+        waitForElement(noteDeleteButton);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",noteDeleteButton);
+    }
+
     public void createNote(String note_title, String note_descr){
         openNotesTab();
         openNoteModal();
         waitForElement(noteTitle);
-//        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();",noteTitle);
-//        noteTitle.sendKeys(note_title);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + note_title + "';",noteTitle);
         waitForElement(noteDescription);
-//        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();",noteDescription);
-//        noteDescription.sendKeys(note_descr);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + note_descr + "';",noteDescription);
         clickSaveNoteButton();
         openNotesTab();
-//        waitForElement(noteTitleDisplay);
         waitForElement(noteDescrDisplay);
-//        waitForElement(userTable);
+    }
+
+    public void editNote(String note_title, String note_descr){
+        createNote(note_title,note_descr);
+        clickToEditButton();
+        waitForElement(noteEditModal);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='New title';",editNoteTitle);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='New description';",editNoteDescription);
+        clickSaveNoteEditButton();
+        openNotesTab();
+        waitForElement(noteDescrDisplay);
+    }
+
+    public void deleteNote(String note_title, String note_descr){
+        createNote(note_title,note_descr);
+        clickNoteDeleteButton();
+        openNotesTab();
     }
 }
