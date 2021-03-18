@@ -241,6 +241,5 @@ public class HomePage {
         openCredentialsTab();
         waitForElement(deleteCredential);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", deleteCredential);
-        openCredentialsTab();
     }
 }

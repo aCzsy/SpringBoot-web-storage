@@ -41,7 +41,6 @@ class CloudStorageApplicationTests {
 	private LoginPage loginPage;
 	private SignupPage signupPage;
 	private HomePage homePage;
-	private Authentication authentication;
 
 	@Autowired
 	private CredentialService credentialService;
@@ -193,7 +192,8 @@ class CloudStorageApplicationTests {
 
 		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
 
-		Map<String,String> credentialElements = returnedListOfCredentials.stream()
+		Map<String,String> credentialElements = returnedListOfCredentials
+				.stream()
 				.collect(Collectors.toMap(Credential::getPassword, Credential::getKey));
 
 		List<String> decrytptedPasswords = credentialElements
@@ -232,10 +232,10 @@ class CloudStorageApplicationTests {
 		listOfCredentials
 				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
 
-		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
-
 		listOfCredentials
 				.forEach(x -> homePage.deleteCredentials());
+
+		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
 
 		Assertions.assertTrue(returnedListOfCredentials.isEmpty());
 	}
