@@ -232,10 +232,12 @@ class CloudStorageApplicationTests {
 		listOfCredentials
 				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
 
+		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
+
 		listOfCredentials
 				.forEach(x -> homePage.deleteCredentials());
 
-		Assertions.assertTrue(listOfCredentials.isEmpty());
+		Assertions.assertTrue(returnedListOfCredentials.isEmpty());
 	}
 
 }
