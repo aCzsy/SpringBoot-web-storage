@@ -163,7 +163,7 @@ class CloudStorageApplicationTests {
 	 */
 
 	@Test
-	public void testCredentialAdd(){
+	public void testCredentialsAddAndVerifiedEncryption(){
 		Credential credential1 = new Credential();
 		credential1.setUrl("http://facebook.com");
 		credential1.setUsername("User");
