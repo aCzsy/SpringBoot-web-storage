@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.SignupPage;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
@@ -17,6 +18,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -143,6 +145,15 @@ class CloudStorageApplicationTests {
 	 * CREDENTIALS SECTION
 	 */
 
+	@Test
+	public void testCredentialAdd(){
+		String url = "http://facebook.com";
+		String username = "User";
+		String password = "root";
 
+		testSignupLogin();
+		homePage.addNewCredentials(url,username,password);
+		Assertions.assertEquals(url,homePage.getCredentialUrl());
+	}
 
 }

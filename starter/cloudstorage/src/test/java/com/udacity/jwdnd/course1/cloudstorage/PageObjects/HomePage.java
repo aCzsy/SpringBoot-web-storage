@@ -97,6 +97,24 @@ public class HomePage {
     @FindBy(id = "nav-credentials-tab")
     private WebElement navCredentialsTab;
 
+    @FindBy(id = "open-credentials-modal")
+    private WebElement openCredentialsModal;
+
+    @FindBy(id = "credential-url")
+    private WebElement credentialUrl;
+
+    @FindBy(id = "credential-username")
+    private WebElement credentialUsername;
+
+    @FindBy(id = "credential-password")
+    private WebElement credentialPassword;
+
+    @FindBy(id = "credential-submit")
+    private WebElement submitCredential;
+
+    @FindBy(id = "credential-table-password")
+    private WebElement credentialPasswordDisplayed;
+
 
 
     /**
@@ -178,11 +196,29 @@ public class HomePage {
     /**
      * CREDENTIALS SECTION
      */
+    public String getCredentialUrl(){
+        return credentialUrl.getAttribute("value");
+    }
 
     public void openCredentialsTab(){
         waitForElement(navCredentialsTab);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",navCredentialsTab);
     }
-    
+
+    public void openCredentialsModal(){
+        waitForElement(openCredentialsModal);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",openCredentialsModal);
+    }
+
+    public void addNewCredentials(String url, String username, String password){
+        openCredentialsTab();
+        openCredentialsModal();
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + url + "';",credentialUrl);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + username + "';", credentialUsername);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + password + "';", credentialPassword);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", submitCredential);
+        openCredentialsTab();
+        waitForElement(credentialPasswordDisplayed);
+    }
 
 }
