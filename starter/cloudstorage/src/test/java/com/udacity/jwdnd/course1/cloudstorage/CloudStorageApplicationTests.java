@@ -205,7 +205,37 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(returnedListOfCredentials.isEmpty());
 		Assertions.assertEquals(3, returnedListOfCredentials.size());
 		Assertions.assertTrue(credentialsRawPasswords.containsAll(decrytptedPasswords) && decrytptedPasswords.containsAll(credentialsRawPasswords));
+	}
 
+	@Test
+	public void testDeleteCredentials(){
+		Credential credential1 = new Credential();
+		credential1.setUrl("http://facebook.com");
+		credential1.setUsername("User");
+		credential1.setPassword("root");
+		Credential credential2 = new Credential();
+		credential2.setUrl("http://google.com");
+		credential2.setUsername("User2");
+		credential2.setPassword("root2");
+		Credential credential3 = new Credential();
+		credential3.setUrl("http://dropbox.com");
+		credential3.setUsername("User3");
+		credential3.setPassword("root3");
+
+		List<Credential> listOfCredentials = new ArrayList<>();
+		listOfCredentials.add(credential1);
+		listOfCredentials.add(credential2);
+		listOfCredentials.add(credential3);
+
+		testSignupLogin();
+
+		listOfCredentials
+				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
+
+		listOfCredentials
+				.forEach(x -> homePage.deleteCredentials());
+
+		Assertions.assertTrue(listOfCredentials.isEmpty());
 	}
 
 }

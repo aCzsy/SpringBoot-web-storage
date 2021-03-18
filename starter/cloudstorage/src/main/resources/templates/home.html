@@ -215,7 +215,7 @@
                                         th:credentialUsername="${credential.username}", th:credentialPassword="${decryptedPassword.decryptValue(credential.password,credential.key)}"
                                         onclick="showCredentialEditModal(this.getAttribute('credentialId'),this.getAttribute('credentialUrl'),
                                         this.getAttribute('credentialUsername'),this.getAttribute('credentialPassword'))">Edit</button>
-                                        <a class="btn btn-danger" th:href="@{/delete-credential/(credentialId=${credential.getCredentialid()})}">Delete</a>
+                                        <a class="btn btn-danger" id="delete-credential" th:href="@{/delete-credential/(credentialId=${credential.getCredentialid()})}">Delete</a>
                                     </td>
                                     <th id="credential-table-url" scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
                                     <td id="credential-table-username" th:text="${credential.getUsername()}">Example Credential Username</td>

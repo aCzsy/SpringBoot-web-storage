@@ -125,6 +125,8 @@ public class HomePage {
     @FindBy(id = "save-edit-credential")
     private WebElement saveCredentialChanges;
 
+    @FindBy(id = "delete-credential")
+    private WebElement deleteCredential;
 
 
     /**
@@ -231,19 +233,14 @@ public class HomePage {
         waitForElement(credentialPasswordDisplayed);
     }
 
-    public void getDecryptedPw(){
-        openCredentialsTab();
-        waitForElement(clickCredentialEdit);
-        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", clickCredentialEdit);
-        System.out.println(credentialEditPassword.getAttribute("value"));
-        waitForElement(saveCredentialChanges);
-        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",saveCredentialChanges);
-//        return credentialEditPassword.getAttribute("value");
-    }
-
     public void iterateOverMap(Map<String,String> map){
         map.entrySet().forEach(System.out::println);
     }
 
-
+    public void deleteCredentials(){
+        openCredentialsTab();
+        waitForElement(deleteCredential);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", deleteCredential);
+        openCredentialsTab();
+    }
 }
