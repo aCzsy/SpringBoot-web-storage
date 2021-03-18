@@ -240,4 +240,9 @@ class CloudStorageApplicationTests {
 		Assertions.assertTrue(returnedListOfCredentials.isEmpty());
 	}
 
+	@Test
+	public void testEditPassword(){
+
+	}
+
 }
