@@ -50,6 +50,10 @@ public class CredentialService {
         return credentialsMapper.getAllCredentials(currentUser.getUserid());
     }
 
+    public List<Credential> getAllCredentialsWithoutId(){
+        return credentialsMapper.getAllCredentialsWithoutId();
+    }
+
     public Credential getCredential(Integer credentialId){
         return credentialsMapper.getCredential(credentialId);
     }

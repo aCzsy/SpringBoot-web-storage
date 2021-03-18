@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.Map;
 
 public class HomePage {
     @FindBy(id = "logout-button")
@@ -114,6 +115,15 @@ public class HomePage {
 
     @FindBy(id = "credential-table-password")
     private WebElement credentialPasswordDisplayed;
+
+    @FindBy(id = "credentialEdit-password")
+    private WebElement credentialEditPassword;
+
+    @FindBy(id = "open-credentials-edit-modal")
+    private WebElement clickCredentialEdit;
+
+    @FindBy(id = "save-edit-credential")
+    private WebElement saveCredentialChanges;
 
 
 
@@ -220,5 +230,20 @@ public class HomePage {
         openCredentialsTab();
         waitForElement(credentialPasswordDisplayed);
     }
+
+    public void getDecryptedPw(){
+        openCredentialsTab();
+        waitForElement(clickCredentialEdit);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", clickCredentialEdit);
+        System.out.println(credentialEditPassword.getAttribute("value"));
+        waitForElement(saveCredentialChanges);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",saveCredentialChanges);
+//        return credentialEditPassword.getAttribute("value");
+    }
+
+    public void iterateOverMap(Map<String,String> map){
+        map.entrySet().forEach(System.out::println);
+    }
+
 
 }
