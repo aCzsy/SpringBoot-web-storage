@@ -123,6 +123,12 @@ public class HomePage {
     @FindBy(id = "credential-table-password")
     private WebElement credentialPasswordDisplayed;
 
+    @FindBy(id = "credentialEdit-url")
+    private WebElement credentialEditUrl;
+
+    @FindBy(id = "credentialEdit-username")
+    private WebElement credentialEditUsername;
+
     @FindBy(id = "credentialEdit-password")
     private WebElement credentialEditPassword;
 
@@ -274,7 +280,16 @@ public class HomePage {
     }
 
     public void clickCloseEditCredential(){
+        openCredentialsTab();
         waitForElement(clickCloseEditCredential);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",clickCloseEditCredential);
+    }
+
+    public void editCredential(String url, String username, String password){
+        waitForElement(credentialEditUrl);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + url + "';", credentialEditUrl);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + username + "';", credentialEditUsername);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + password + "';", credentialEditPassword);
+        saveCredentialEdit();
     }
 }

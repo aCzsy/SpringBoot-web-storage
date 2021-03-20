@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.PageObjects.HomePage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.CredentialFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
@@ -11,11 +12,10 @@ import com.udacity.jwdnd.course1.cloudstorage.services.EncryptDecryptService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +26,8 @@ import org.springframework.security.core.Authentication;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,6 +47,11 @@ class CloudStorageApplicationTests {
 	private EncryptionService encryptionService;
 	@Autowired
 	private EncryptDecryptService encryptDecryptService;
+
+	private void waitForElement(WebElement webElement){
+		new WebDriverWait(driver,10)
+				.until(ExpectedConditions.visibilityOf(webElement));
+	}
 
 	@BeforeAll
 	static void beforeAll() {
@@ -277,17 +280,54 @@ class CloudStorageApplicationTests {
 
 		WebElement table = driver.findElement(By.id("credentialTable"));
 		List<WebElement> rowPasswords = table.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr"));
+		WebElement btn = driver.findElement(By.xpath("//*[@id=\"open-credentials-edit-modal\"]"));
 		int numOfRows = driver.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr")).size();
 
+
+		List<CredentialFormObject> editedCredentials = new ArrayList<>();
+
+		CredentialFormObject credentialFormObject1 = new CredentialFormObject();
+		credentialFormObject1.setCredentialUrl("http://microsoft.com");
+		credentialFormObject1.setCredentialUsername("New user");
+		credentialFormObject1.setCredentialPassword("newroot");
+
+		CredentialFormObject credentialFormObject2 = new CredentialFormObject();
+		credentialFormObject2.setCredentialUrl("http://johndoe.com");
+		credentialFormObject2.setCredentialUsername("New user2");
+		credentialFormObject2.setCredentialPassword("newroot2");
+
+		CredentialFormObject credentialFormObject3 = new CredentialFormObject();
+		credentialFormObject3.setCredentialUrl("http://testing.com");
+		credentialFormObject3.setCredentialUsername("New user3");
+		credentialFormObject3.setCredentialPassword("newroot3");
+
+		editedCredentials.add(credentialFormObject1);
+		editedCredentials.add(credentialFormObject2);
+		editedCredentials.add(credentialFormObject3);
+
 		for(int i = 0;i < numOfRows;i++){
-			try{
-				homePage.viewCredentialPassword();
-				Assertions.assertEquals(homePage.getDecryptedCredentialPassword(),decryptedCredentialPasswords.get(i));
-				homePage.clickCloseEditCredential();
-			} catch (InterruptedException e){
-				e.printStackTrace();
-			}
+			WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
+			waitForElement(credentialsTab);
+			((JavascriptExecutor)driver).executeScript("arguments[0].click();",credentialsTab);
+			WebElement editBtn = driver.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/td[1]/button"));
+			waitForElement(editBtn);
+			editBtn.click();
+			Assertions.assertEquals(homePage.getDecryptedCredentialPassword(),decryptedCredentialPasswords.get(i));
+			homePage.editCredential(editedCredentials.get(i).getCredentialUrl(), editedCredentials.get(i).getCredentialUsername(), editedCredentials.get(i).getCredentialPassword());
 		}
+
+
+//		WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
+//		waitForElement(credentialsTab);
+//		((JavascriptExecutor)driver).executeScript("arguments[0].click();",credentialsTab);
+//		WebElement credentialUrl = table.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[1]/th"));
+//		System.out.println(credentialUrl.getText());
+
+//		for(int i = 0;i < numOfRows;i++) {
+//			WebElement credentialUrl = driver.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/th"));
+//			System.out.println(credentialUrl.getText());
+////			Assertions.assertEquals(credentialUrl.getText(),editedCredentials.get(i).getCredentialUrl());
+//		}
 	}
 
 }
