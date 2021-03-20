@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.PageObjects.LoginPage;
 import com.udacity.jwdnd.course1.cloudstorage.PageObjects.SignupPage;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.model.NoteFormObject;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptDecryptService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
@@ -46,6 +47,8 @@ class CloudStorageApplicationTests {
 	private CredentialService credentialService;
 	@Autowired
 	private EncryptionService encryptionService;
+	@Autowired
+	private EncryptDecryptService encryptDecryptService;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -238,11 +241,53 @@ class CloudStorageApplicationTests {
 		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
 
 		Assertions.assertTrue(returnedListOfCredentials.isEmpty());
+		Assertions.assertThrows(NoSuchElementException.class,() -> {
+			homePage.getCredentialUrl();
+		});
 	}
 
 	@Test
-	public void testEditPassword(){
+	public void testEditPassword() throws InterruptedException {
+		Credential credential1 = new Credential();
+		credential1.setUrl("http://facebook.com");
+		credential1.setUsername("User");
+		credential1.setPassword("root");
+		Credential credential2 = new Credential();
+		credential2.setUrl("http://google.com");
+		credential2.setUsername("User2");
+		credential2.setPassword("root2");
+		Credential credential3 = new Credential();
+		credential3.setUrl("http://dropbox.com");
+		credential3.setUsername("User3");
+		credential3.setPassword("root3");
 
+		List<Credential> listOfCredentials = new ArrayList<>();
+		listOfCredentials.add(credential1);
+		listOfCredentials.add(credential2);
+		listOfCredentials.add(credential3);
+
+		testSignupLogin();
+		listOfCredentials
+				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
+
+		List<String> decryptedCredentialPasswords = credentialService.getAllCredentialsWithoutId()
+				.stream()
+				.map(element -> encryptionService.decryptValue(element.getPassword(),element.getKey()))
+				.collect(Collectors.toList());
+
+		WebElement table = driver.findElement(By.id("credentialTable"));
+		List<WebElement> rowPasswords = table.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr"));
+		int numOfRows = driver.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr")).size();
+
+		for(int i = 0;i < numOfRows;i++){
+			try{
+				homePage.viewCredentialPassword();
+				Assertions.assertEquals(homePage.getDecryptedCredentialPassword(),decryptedCredentialPasswords.get(i));
+				homePage.clickCloseEditCredential();
+			} catch (InterruptedException e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

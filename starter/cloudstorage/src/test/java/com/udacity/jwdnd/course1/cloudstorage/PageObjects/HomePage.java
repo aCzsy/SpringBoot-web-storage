@@ -1,10 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.PageObjects;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HomePage {
     @FindBy(id = "logout-button")
@@ -104,6 +108,9 @@ public class HomePage {
     @FindBy(id = "credential-url")
     private WebElement credentialUrl;
 
+    @FindBy(id = "credential-table-url")
+    private WebElement credentialUrlDisplayed;
+
     @FindBy(id = "credential-username")
     private WebElement credentialUsername;
 
@@ -128,6 +135,11 @@ public class HomePage {
     @FindBy(id = "delete-credential")
     private WebElement deleteCredential;
 
+    @FindBy(id = "credential-edit-close")
+    private WebElement clickCloseEditCredential;
+
+    @FindBy(id = "credential-list")
+    private List<WebElement> listOfCredentials;
 
     /**
      * NOTES SECTION
@@ -209,7 +221,11 @@ public class HomePage {
      * CREDENTIALS SECTION
      */
     public String getCredentialUrl(){
-        return credentialUrl.getAttribute("value");
+        return credentialUrlDisplayed.getText();
+    }
+
+    public String getDecryptedCredentialPassword(){
+        return credentialEditPassword.getAttribute("value");
     }
 
     public void openCredentialsTab(){
@@ -241,5 +257,24 @@ public class HomePage {
         openCredentialsTab();
         waitForElement(deleteCredential);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", deleteCredential);
+    }
+
+    public void viewCredentialPassword() throws InterruptedException {
+        Thread.sleep(1000);
+        openCredentialsTab();
+        waitForElement(credentialUrlDisplayed);
+        waitForElement(clickCredentialEdit);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",clickCredentialEdit);
+        waitForElement(credentialEditPassword);
+    }
+
+    public void saveCredentialEdit(){
+        waitForElement(saveCredentialChanges);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",saveCredentialChanges);
+    }
+
+    public void clickCloseEditCredential(){
+        waitForElement(clickCloseEditCredential);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",clickCloseEditCredential);
     }
 }

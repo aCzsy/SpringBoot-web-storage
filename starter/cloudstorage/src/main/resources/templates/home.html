@@ -209,7 +209,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="credential : ${credentials}">
+                                <tr id="credential-list" th:each="credential : ${credentials}">
                                     <td>
                                         <button type="button" id="open-credentials-edit-modal" class="btn btn-success" th:credentialId="${credential.credentialid}" th:credentialUrl="${credential.url}"
                                         th:credentialUsername="${credential.username}", th:credentialPassword="${decryptedPassword.decryptValue(credential.password,credential.key)}"
@@ -271,7 +271,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="#" th:object="${credentialFormObject}" th:action="@{/update-credential}" method="POST">
+                                    <form action="#" id="credentialEditForm" th:object="${credentialFormObject}" th:action="@{/update-credential}" method="POST">
                                         <input type="hidden" name="credentialEditId" id="credentialEdit-id" th:field="*{credentialId}">
                                         <div class="form-group">
                                             <label for="note-title" class="col-form-label">URL</label>
@@ -289,7 +289,7 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" id="credential-edit-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" id="save-edit-credential" class="btn btn-primary" onclick="$('#credentialEditSubmit').click();">Save changes</button>
                                 </div>
                             </div>
