@@ -18,11 +18,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD) //REMOVES DATA BEFORE EACH TEST
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) //H2 USED IN IN-MEMORY MODE
 class CloudStorageApplicationTests {
 
 	@LocalServerPort

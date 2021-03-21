@@ -32,6 +32,7 @@ public class HomePage {
                 .until(ExpectedConditions.visibilityOf(webElement));
     }
 
+
     /**
      * NOTES SECTION
      */
