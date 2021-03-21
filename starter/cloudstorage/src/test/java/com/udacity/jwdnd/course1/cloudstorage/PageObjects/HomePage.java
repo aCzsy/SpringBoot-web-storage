@@ -291,5 +291,6 @@ public class HomePage {
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + username + "';", credentialEditUsername);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + password + "';", credentialEditPassword);
         saveCredentialEdit();
+        openCredentialsTab();
     }
 }

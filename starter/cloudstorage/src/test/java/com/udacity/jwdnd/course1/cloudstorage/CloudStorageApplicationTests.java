@@ -40,6 +40,9 @@ class CloudStorageApplicationTests {
 	private LoginPage loginPage;
 	private SignupPage signupPage;
 	private HomePage homePage;
+	private WebElement credentialsTab;
+	private WebElement editBtn;
+	private WebElement table;
 
 	@Autowired
 	private CredentialService credentialService;
@@ -49,7 +52,7 @@ class CloudStorageApplicationTests {
 	private EncryptDecryptService encryptDecryptService;
 
 	private void waitForElement(WebElement webElement){
-		new WebDriverWait(driver,10)
+		new WebDriverWait(driver,40)
 				.until(ExpectedConditions.visibilityOf(webElement));
 	}
 
@@ -135,6 +138,7 @@ class CloudStorageApplicationTests {
 		String noteDescription = "This note is for testing";
 
 		testSignupLogin();
+		//Creating a note and verifying that the note details are displayed
 		homePage.createNote(noteTitle,noteDescription);
 		Assertions.assertEquals(noteTitle,homePage.getNoteTitle());
 		Assertions.assertEquals(noteDescription,homePage.getNoteDescription());
@@ -146,6 +150,7 @@ class CloudStorageApplicationTests {
 		String noteDescription = "This note is for testing";
 
 		testSignupLogin();
+		//Editing a note and verifying that new details are updated
 		homePage.editNote(noteTitle,noteDescription);
 		Assertions.assertEquals("New title", homePage.getNoteTitle());
 		Assertions.assertEquals("New description", homePage.getNoteDescription());
@@ -157,10 +162,12 @@ class CloudStorageApplicationTests {
 		String noteDescription = "This note is for testing";
 
 		testSignupLogin();
+		//Deleting note and verifying that nothing is displayed
 		homePage.deleteNote(noteTitle,noteDescription);
 		Assertions.assertThrows(NoSuchElementException.class,()-> {
 			homePage.getNoteTitle();
 		});
+
 	}
 
 	/**
@@ -169,6 +176,7 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testCredentialsAddAndVerifiedEncryption(){
+		//Creating a set of new credentials
 		Credential credential1 = new Credential();
 		credential1.setUrl("http://facebook.com");
 		credential1.setUsername("User");
@@ -186,35 +194,49 @@ class CloudStorageApplicationTests {
 		listOfCredentials.add(credential1);
 		listOfCredentials.add(credential2);
 		listOfCredentials.add(credential3);
-		List<String> credentialsRawPasswords = listOfCredentials
-				.stream()
-				.map(Credential::getPassword)
-				.collect(Collectors.toList());
+//		List<String> credentialsRawPasswords = listOfCredentials
+//				.stream()
+//				.map(Credential::getPassword)
+//				.collect(Collectors.toList());
 
 		testSignupLogin();
 
+		//Adding each credential
 		listOfCredentials
 				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
 
+		//Getting all credentials from db
 		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
 
-		Map<String,String> credentialElements = returnedListOfCredentials
-				.stream()
-				.collect(Collectors.toMap(Credential::getPassword, Credential::getKey));
+		//Number of rows in a table
+		int numOfRows = driver.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr")).size();
 
-		List<String> decrytptedPasswords = credentialElements
-				.entrySet()
-				.stream()
-				.map(element -> encryptionService.decryptValue(element.getKey(),element.getValue()))
-				.collect(Collectors.toList());
+		//Looping through each row and verifying that every password displayed is encrypted
+		for(int i = 0; i < numOfRows;i++){
+			table = driver.findElement(By.id("credentialTable"));
+			waitForElement(table);
+			WebElement credentialPassword = table.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/td[3]"));
+			Assertions.assertEquals(credentialPassword.getText(),returnedListOfCredentials.get(i).getPassword());
+		}
 
-		Assertions.assertFalse(returnedListOfCredentials.isEmpty());
-		Assertions.assertEquals(3, returnedListOfCredentials.size());
-		Assertions.assertTrue(credentialsRawPasswords.containsAll(decrytptedPasswords) && decrytptedPasswords.containsAll(credentialsRawPasswords));
+//		Map<String,String> credentialElements = returnedListOfCredentials
+//				.stream()
+//				.collect(Collectors.toMap(Credential::getPassword, Credential::getKey));
+//
+//		List<String> decrytptedPasswords = credentialElements
+//				.entrySet()
+//				.stream()
+//				.map(element -> encryptionService.decryptValue(element.getKey(),element.getValue()))
+//				.collect(Collectors.toList());
+
+//		Assertions.assertFalse(returnedListOfCredentials.isEmpty());
+//		Assertions.assertEquals(3, returnedListOfCredentials.size());
+//		Assertions.assertTrue(credentialsRawPasswords.containsAll(decrytptedPasswords) && decrytptedPasswords.containsAll(credentialsRawPasswords));
 	}
 
 	@Test
 	public void testDeleteCredentials(){
+		//Creating a set of new credentials
 		Credential credential1 = new Credential();
 		credential1.setUrl("http://facebook.com");
 		credential1.setUsername("User");
@@ -235,14 +257,18 @@ class CloudStorageApplicationTests {
 
 		testSignupLogin();
 
+		//Adding each credential
 		listOfCredentials
 				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
 
+		//Deleting each credential
 		listOfCredentials
 				.forEach(x -> homePage.deleteCredentials());
 
+		//Getting all credentials from db
 		List<Credential> returnedListOfCredentials = credentialService.getAllCredentialsWithoutId();
 
+		//Asserting that no credentials were returned, the list is empty and there is nothing displayed
 		Assertions.assertTrue(returnedListOfCredentials.isEmpty());
 		Assertions.assertThrows(NoSuchElementException.class,() -> {
 			homePage.getCredentialUrl();
@@ -250,7 +276,8 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void testEditPassword() throws InterruptedException {
+	public void testEditPassword() {
+		//Creating set of new credentials
 		Credential credential1 = new Credential();
 		credential1.setUrl("http://facebook.com");
 		credential1.setUsername("User");
@@ -270,22 +297,19 @@ class CloudStorageApplicationTests {
 		listOfCredentials.add(credential3);
 
 		testSignupLogin();
+		//Adding each credential
 		listOfCredentials
 				.forEach(x -> homePage.addNewCredentials(x.getUrl(), x.getUsername(), x.getPassword()));
 
+		//Getting passwords of all credentials from db, decrypting them and storing them in a list
 		List<String> decryptedCredentialPasswords = credentialService.getAllCredentialsWithoutId()
 				.stream()
 				.map(element -> encryptionService.decryptValue(element.getPassword(),element.getKey()))
 				.collect(Collectors.toList());
 
-		WebElement table = driver.findElement(By.id("credentialTable"));
-		List<WebElement> rowPasswords = table.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr"));
-		WebElement btn = driver.findElement(By.xpath("//*[@id=\"open-credentials-edit-modal\"]"));
-		int numOfRows = driver.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr")).size();
-
-
 		List<CredentialFormObject> editedCredentials = new ArrayList<>();
 
+		//Creating set of credentials which will replace existing ones
 		CredentialFormObject credentialFormObject1 = new CredentialFormObject();
 		credentialFormObject1.setCredentialUrl("http://microsoft.com");
 		credentialFormObject1.setCredentialUsername("New user");
@@ -305,29 +329,30 @@ class CloudStorageApplicationTests {
 		editedCredentials.add(credentialFormObject2);
 		editedCredentials.add(credentialFormObject3);
 
+		credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
+		waitForElement(credentialsTab);
+		((JavascriptExecutor)driver).executeScript("arguments[0].click();",credentialsTab);
+
+		//Number of rows in a table
+		int numOfRows = driver.findElements(By.xpath("//*[@id=\"credentialTable\"]/tbody/tr")).size();
+
+		//Looping through each row, clicking edit button,
+		// verifying that pw in editmodal is decrypted,
+		// editing credential,saving it, verifying that each credential is displayed
+		//and their passwords are encrypted
 		for(int i = 0;i < numOfRows;i++){
-			WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
-			waitForElement(credentialsTab);
-			((JavascriptExecutor)driver).executeScript("arguments[0].click();",credentialsTab);
-			WebElement editBtn = driver.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/td[1]/button"));
+			editBtn = driver.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/td[1]/button"));
 			waitForElement(editBtn);
 			editBtn.click();
 			Assertions.assertEquals(homePage.getDecryptedCredentialPassword(),decryptedCredentialPasswords.get(i));
 			homePage.editCredential(editedCredentials.get(i).getCredentialUrl(), editedCredentials.get(i).getCredentialUsername(), editedCredentials.get(i).getCredentialPassword());
+			table = driver.findElement(By.id("credentialTable"));
+			waitForElement(table);
+			WebElement credentialUrl = table.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) +"]/th"));
+			waitForElement(credentialUrl);
+			Assertions.assertEquals(credentialUrl.getText(),editedCredentials.get(i).getCredentialUrl());
 		}
 
-
-//		WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
-//		waitForElement(credentialsTab);
-//		((JavascriptExecutor)driver).executeScript("arguments[0].click();",credentialsTab);
-//		WebElement credentialUrl = table.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[1]/th"));
-//		System.out.println(credentialUrl.getText());
-
-//		for(int i = 0;i < numOfRows;i++) {
-//			WebElement credentialUrl = driver.findElement(By.xpath("/html/body/div/div[2]/div/div[4]/div[1]/table/tbody/tr[" + (i+1) + "]/th"));
-//			System.out.println(credentialUrl.getText());
-////			Assertions.assertEquals(credentialUrl.getText(),editedCredentials.get(i).getCredentialUrl());
-//		}
 	}
 
 }
