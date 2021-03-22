@@ -30,7 +30,6 @@ public class HomeController {
     private String successNote;
 
 
-
     @Autowired
     public HomeController(NoteService noteService, UserService userService, CredentialService credentialService, EncryptionService encryptionService, FileService fileService) {
         this.noteService = noteService;

@@ -149,12 +149,22 @@ public class HomePage {
     private List<WebElement> listOfCredentials;
 
     /**
+     * RESULTS PAGE WEB ELEMENTS
+     */
+    @FindBy(className = "home-url")
+    private WebElement homePageRedirectButton;
+
+    /**
      * NOTES SECTION
      * @return
      */
 
     public String getNoteTitle(){
         return noteTitleDisplay.getText();
+    }
+
+    public String getNoteDescriptionDisplayed(){
+        return noteDescrDisplay.getText();
     }
 
     public String getNoteDescription(){
@@ -195,6 +205,11 @@ public class HomePage {
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",noteDeleteButton);
     }
 
+    public void clickHomePageRedirectButton(){
+        waitForElement(homePageRedirectButton);
+        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",homePageRedirectButton);
+    }
+
     public void createNote(String note_title, String note_descr){
         openNotesTab();
         openNoteModal();
@@ -203,6 +218,7 @@ public class HomePage {
         waitForElement(noteDescription);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + note_descr + "';",noteDescription);
         clickSaveNoteButton();
+        clickHomePageRedirectButton();
         openNotesTab();
         waitForElement(noteDescrDisplay);
     }
@@ -214,6 +230,7 @@ public class HomePage {
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='New title';",editNoteTitle);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='New description';",editNoteDescription);
         clickSaveNoteEditButton();
+        clickHomePageRedirectButton();
         openNotesTab();
         waitForElement(noteDescrDisplay);
     }
@@ -221,6 +238,7 @@ public class HomePage {
     public void deleteNote(String note_title, String note_descr){
         createNote(note_title,note_descr);
         clickNoteDeleteButton();
+        clickHomePageRedirectButton();
         openNotesTab();
     }
 
@@ -252,6 +270,7 @@ public class HomePage {
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + username + "';", credentialUsername);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + password + "';", credentialPassword);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", submitCredential);
+        clickHomePageRedirectButton();
         openCredentialsTab();
         waitForElement(credentialPasswordDisplayed);
     }
@@ -264,15 +283,7 @@ public class HomePage {
         openCredentialsTab();
         waitForElement(deleteCredential);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();", deleteCredential);
-    }
-
-    public void viewCredentialPassword() throws InterruptedException {
-        Thread.sleep(1000);
-        openCredentialsTab();
-        waitForElement(credentialUrlDisplayed);
-        waitForElement(clickCredentialEdit);
-        ((JavascriptExecutor)webDriver).executeScript("arguments[0].click();",clickCredentialEdit);
-        waitForElement(credentialEditPassword);
+        clickHomePageRedirectButton();
     }
 
     public void saveCredentialEdit(){
@@ -292,6 +303,7 @@ public class HomePage {
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + username + "';", credentialEditUsername);
         ((JavascriptExecutor)webDriver).executeScript("arguments[0].value='" + password + "';", credentialEditPassword);
         saveCredentialEdit();
+        clickHomePageRedirectButton();
         openCredentialsTab();
     }
 }

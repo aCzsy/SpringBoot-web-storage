@@ -137,7 +137,7 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void testCreateNote(){
+	public void testCreateNote() throws InterruptedException {
 		String noteTitle = "My note";
 		String noteDescription = "This note is for testing";
 
@@ -145,7 +145,7 @@ class CloudStorageApplicationTests {
 		//Creating a note and verifying that the note details are displayed
 		homePage.createNote(noteTitle,noteDescription);
 		Assertions.assertEquals(noteTitle,homePage.getNoteTitle());
-		Assertions.assertEquals(noteDescription,homePage.getNoteDescription());
+		Assertions.assertEquals(noteDescription,homePage.getNoteDescriptionDisplayed());
 	}
 
 	@Test
@@ -157,7 +157,7 @@ class CloudStorageApplicationTests {
 		//Editing a note and verifying that new details are updated
 		homePage.editNote(noteTitle,noteDescription);
 		Assertions.assertEquals("New title", homePage.getNoteTitle());
-		Assertions.assertEquals("New description", homePage.getNoteDescription());
+		Assertions.assertEquals("New description", homePage.getNoteDescriptionDisplayed());
 	}
 
 	@Test
