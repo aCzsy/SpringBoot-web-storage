@@ -50,7 +50,7 @@ public class HomeController {
         return "home";
     }
 
-    @PostMapping("/home")
+    @PostMapping("/add-note-result")
     public String writeNote(@ModelAttribute("noteFormObject") NoteFormObject noteFormObject, @ModelAttribute("fileFormObject") FileFormObject fileFormObject,
                             @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                             Model model, Authentication authentication){
@@ -59,12 +59,12 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "Note was successfully added.";
+        successNote = "Note has been successfully added.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @GetMapping("/deleteNote")
+    @GetMapping("/delete-note-result")
     public String deleteCurrentNote(@RequestParam(value = "id") Integer id, @RequestParam(value = "noteid") Integer noteid, Model model,
                                     @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                     @ModelAttribute("noteFormObject") NoteFormObject noteFormObject, Authentication authentication){
@@ -76,12 +76,12 @@ public class HomeController {
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
         System.out.println("Executing deleteCurrentNote()");
-        successNote = "Note was successfully deleted.";
+        successNote = "Note has been successfully deleted.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @PostMapping("/updateNote")
+    @PostMapping("/update-note-result")
     public String updateNote(@RequestParam("noteId") Integer noteId, Model model, @ModelAttribute("fileFormObject") FileFormObject fileFormObject,
                              @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,Authentication authentication){
@@ -91,12 +91,12 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "Your note was successfully updated.";
+        successNote = "Your note has been successfully updated.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @PostMapping("/add-credential")
+    @PostMapping("/add-credential-result")
     public String addCredential(@ModelAttribute("noteFormObject") NoteFormObject noteFormObject, @ModelAttribute("fileFormObject") FileFormObject fileFormObject,
                                 @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                 Model model, Authentication authentication){
@@ -105,12 +105,12 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "Credential was successfully added.";
+        successNote = "Credential has been successfully added.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @GetMapping("/delete-credential")
+    @GetMapping("/delete-credential-result")
     public String deleteCredential(@RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                                    @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                    Model model, Authentication authentication){
@@ -119,12 +119,12 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "Credential was deleted successfully.";
+        successNote = "Credential has been deleted successfully.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @PostMapping("/update-credential")
+    @PostMapping("/update-credential-result")
     public String updateCredential(@RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                                    @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                    Model model, Authentication authentication){
@@ -133,12 +133,12 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "Credential was successfully updated.";
+        successNote = "Credential has been successfully updated.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
 
-    @PostMapping("/add-file")
+    @PostMapping("/add-file-result")
     public String uploadFile(@ModelAttribute("fileFormObject") FileFormObject fileFormObject, @ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                              @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              Model model, Authentication authentication) throws IOException, SQLException {
@@ -161,7 +161,7 @@ public class HomeController {
         return "result";
     }
 
-    @GetMapping("/delete-file")
+    @GetMapping("/delete-file-result")
     public String deleteFile(@RequestParam(value = "id") Integer fileId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                              @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              Model model, Authentication authentication){
@@ -170,7 +170,7 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        successNote = "File was deleted successfully.";
+        successNote = "File has been deleted successfully.";
         model.addAttribute("successNote",successNote);
         return "result";
     }
