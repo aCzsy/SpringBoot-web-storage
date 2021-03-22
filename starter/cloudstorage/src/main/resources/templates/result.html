@@ -9,20 +9,62 @@
         <title>Result</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
-        <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div class="alert alert-success fill-parent">
-                <h1 class="display-5">Success</h1>
-                <span>Your changes were successfully saved. Click <a>here</a> to continue.</span>
-            </div>
-            <div class="alert alert-danger fill-parent">
+<!--        <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">-->
+<!--            <div class="alert alert-success fill-parent" th:if="${addNoteSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Note was successfully added. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+<!--            <div class="alert alert-success fill-parent" th:if="${editNoteSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Your changes were successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+<!--            <div class="alert alert-success fill-parent" th:if="${deleteNoteSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Note was successfully deleted. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+
+<!--            <div class="alert alert-success fill-parent" th:if="${addCredentialSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Credential was successfully added. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+<!--            <div class="alert alert-success fill-parent" th:if="${editCredentialSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Your changes were successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+<!--            <div class="alert alert-success fill-parent" th:if="${deleteCredentialSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>Credential was successfully deleted. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+
+<!--            <div class="alert alert-success fill-parent" th:if="${successUpload}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>File was successfully uploaded. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+<!--            <div class="alert alert-success fill-parent" th:if="${deleteFileSuccess}">-->
+<!--                <h1 class="display-5">Success</h1>-->
+<!--                <span>File was deleted successfully. Click <a th:href="@{/home}">here</a> to continue.</span>-->
+<!--            </div>-->
+
+    <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
+        <div class="alert alert-success fill-parent" th:if="${successNote}">
+            <h1 class="display-5">Success</h1>
+            <span th:text="${successNote} + ' Click '"></span>
+            <a th:href="@{/home}" th:text="' here '"></a>
+            <span>to continue.</span>
+        </div>
+
+            <div class="alert alert-danger fill-parent" th:if="${uploadError}">
                 <h1 class="display-5">Error</h1>
-                <span>Your changes were not saved. Click <a>here</a> to continue.</span>
+                <span th:text="${uploadError} + ' Click '"></span>
+                <a th:href="@{/home#nav-files}" th:text="' here '"></a>
+                <span>to continue.</span>
+<!--                <span>File with this name already exists. Click <a th:href="@{/home#nav-files}">here</a> to continue.</span>-->
             </div>
-            <div class="alert alert-danger fill-parent">
-                <h1 class="display-5">Error</h1>
-                <span>Example Error Message</span>
-                <span>Click <a>here</a> to continue.</span>
-            </div>
+<!--            <div class="alert alert-danger fill-parent">-->
+<!--                <h1 class="display-5">Error</h1>-->
+<!--                <span>Example Error Message</span>-->
+<!--                <span>Click <a>here</a> to continue.</span>-->
+<!--            </div>-->
         </div>
     </body>
 </html>

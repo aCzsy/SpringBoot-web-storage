@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Controller
 //@RequestMapping("/home")
@@ -26,6 +27,8 @@ public class HomeController {
     private CredentialService credentialService;
     private EncryptionService encryptionService;
     private FileService fileService;
+    private String successNote;
+
 
 
     @Autowired
@@ -57,7 +60,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "Note was successfully added.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @GetMapping("/deleteNote")
@@ -72,7 +77,9 @@ public class HomeController {
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
         System.out.println("Executing deleteCurrentNote()");
-        return "home";
+        successNote = "Note was successfully deleted.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @PostMapping("/updateNote")
@@ -85,7 +92,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "Your note was successfully updated.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @PostMapping("/add-credential")
@@ -97,7 +106,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "Credential was successfully added.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @GetMapping("/delete-credential")
@@ -109,7 +120,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "Credential was deleted successfully.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @PostMapping("/update-credential")
@@ -121,7 +134,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "Credential was successfully updated.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @PostMapping("/add-file")
@@ -129,19 +144,22 @@ public class HomeController {
                              @ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              Model model, Authentication authentication) throws IOException, SQLException {
         String uploadError = null;
-        String successUpload = "File has been successfully uploaded";
+        successNote = "File has been successfully uploaded.";
         if(fileService.fileAlreadyExists(fileFormObject.getFileUpload().getOriginalFilename())){
-            uploadError = "File with this name already exists";
+            uploadError = "File with this name already exists.";
+            model.addAttribute("uploadError", uploadError);
+        } else if(fileFormObject.getFileUpload().getSize() == 0){
+            uploadError = "Please select file to upload.";
             model.addAttribute("uploadError", uploadError);
         } else{
-            model.addAttribute("successUpload", successUpload);
+            model.addAttribute("successNote", successNote);
             fileService.addFile(fileFormObject, authentication);
         }
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        return "result";
     }
 
     @GetMapping("/delete-file")
@@ -153,7 +171,9 @@ public class HomeController {
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
         model.addAttribute("files", fileService.getAllFiles(authentication));
-        return "home";
+        successNote = "File was deleted successfully.";
+        model.addAttribute("successNote",successNote);
+        return "result";
     }
 
     @GetMapping("/download-file")
