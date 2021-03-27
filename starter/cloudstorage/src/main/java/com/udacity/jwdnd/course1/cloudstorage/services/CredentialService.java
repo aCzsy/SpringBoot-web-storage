@@ -58,9 +58,14 @@ public class CredentialService {
         return credentialsMapper.getCredential(credentialId);
     }
 
-
-    public void deleteCredential(Integer credentialId){
-        credentialsMapper.deteleCredential(credentialId);
+    public void deleteCredential(Integer userid, Integer credentialid){
+        Integer userById = userMapper.getUserById(userid).getUserid();
+        Integer credentialById = credentialsMapper.getCredential(credentialid).getCredentialid();
+        if(userById.equals(credentialsMapper.getCredential(credentialid).getUserid())){
+            credentialsMapper.deteleCredential(credentialById);
+        } else{
+            throw new RuntimeException("There was an error while processing this request...");
+        }
     }
 
     public void updateCredential(String newUrl, String newUsername, String newPassword, Integer credentialId){

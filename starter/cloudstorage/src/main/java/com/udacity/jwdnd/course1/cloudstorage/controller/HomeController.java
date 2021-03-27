@@ -111,10 +111,14 @@ public class HomeController {
     }
 
     @GetMapping("/delete-credential-result")
-    public String deleteCredential(@RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
+    public String deleteCredential(@RequestParam(value = "id") Integer id, @RequestParam(value = "credentialId") Integer credentialId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                                    @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                                    Model model, Authentication authentication){
-        credentialService.deleteCredential(credentialId);
+
+        User user = userService.getUserById(id);
+        Credential credential = credentialService.getCredential(credentialId);
+        credentialService.deleteCredential(user.getUserid(),credential.getCredentialid());
+
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);
@@ -162,10 +166,14 @@ public class HomeController {
     }
 
     @GetMapping("/delete-file-result")
-    public String deleteFile(@RequestParam(value = "id") Integer fileId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
+    public String deleteFile(@RequestParam(value = "id") Integer id, @RequestParam(value = "fileid") Integer fileId,@ModelAttribute("noteFormObject") NoteFormObject noteFormObject,
                              @ModelAttribute("fileFormObject") FileFormObject fileFormObject,@ModelAttribute("credentialFormObject") CredentialFormObject credentialFormObject,
                              Model model, Authentication authentication){
-        fileService.deleteFile(fileId);
+
+        User user = userService.getUserById(id);
+        File file = fileService.getFileById(fileId);
+        fileService.deleteFile(user.getUserid(), file.getFileId());
+
         model.addAttribute("notes", noteService.getAllNotes(authentication));
         model.addAttribute("credentials", credentialService.getAllCredentials(authentication));
         model.addAttribute("decryptedPassword",encryptionService);

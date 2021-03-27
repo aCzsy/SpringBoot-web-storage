@@ -60,7 +60,7 @@
                                     <td>
                                         <a target="_blank" class="btn btn-success" th:fileId="${file.getFileId()}" th:fileName="${file.getFilename()}" th:fileSize="${file.getFilesize() + ' KBs'}"
                                            onclick="showFileDownloadModal(this.getAttribute('fileId'),this.getAttribute('fileName'),this.getAttribute('fileSize'))">View</a>
-                                        <a  class="btn btn-danger" th:href="@{/delete-file-result/(id=${file.getFileId()})}">Delete</a>
+                                        <a  class="btn btn-danger" th:href="@{/delete-file-result/(id=${file.getUserid()},fileid=${file.getFileId()})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${file.getFilename()}">ExampleFile.txt</th>
                                 </tr>
@@ -215,7 +215,7 @@
                                         th:credentialUsername="${credential.username}", th:credentialPassword="${decryptedPassword.decryptValue(credential.password,credential.key)}"
                                         onclick="showCredentialEditModal(this.getAttribute('credentialId'),this.getAttribute('credentialUrl'),
                                         this.getAttribute('credentialUsername'),this.getAttribute('credentialPassword'))">Edit</button>
-                                        <a class="btn btn-danger" id="delete-credential" th:href="@{/delete-credential-result/(credentialId=${credential.getCredentialid()})}">Delete</a>
+                                        <a class="btn btn-danger" id="delete-credential" th:href="@{/delete-credential-result/(id=${credential.getUserid()}, credentialId=${credential.getCredentialid()})}">Delete</a>
                                     </td>
                                     <th id="credential-table-url" scope="row" th:text="${credential.getUrl()}">Example Credential URL</th>
                                     <td id="credential-table-username" th:text="${credential.getUsername()}">Example Credential Username</td>

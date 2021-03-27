@@ -50,8 +50,14 @@ public class FileService {
         return fileMapper.getAllFiles(userMapper.getUser(authentication.getName()).getUserid());
     }
 
-    public void deleteFile(Integer fileId){
-        fileMapper.deleteFile(fileId);
+    public void deleteFile(Integer userid, Integer fileid){
+        Integer userById = userMapper.getUserById(userid).getUserid();
+        Integer fileById = fileMapper.getFile(fileid).getFileId();
+        if(userById.equals(fileMapper.getFile(fileById).getUserid())){
+            fileMapper.deleteFile(fileById);
+        } else{
+            throw new RuntimeException("There was an error while processing this request...");
+        }
     }
 
     public File downloadFile(Integer fileId){
